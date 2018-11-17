@@ -1,0 +1,14 @@
+{
+  "name": "smiley",
+  "version": "1.0.0",
+  "description": "",
+  "main": "truf.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "truffle test"
+  },
+  "author": "",
+  "license": "ISC"
+}
