@@ -14,7 +14,7 @@ contract SmileyContract
         uint32 readyTime;
     }
 
-    User[] users;
+    User[] public users;
     mapping(address => uint) public UserID;
     mapping(address => uint) UserCount;
     //mapping(address => uint) Donations;
@@ -30,7 +30,7 @@ contract SmileyContract
         uint id = users.push(User(_name, _age, 0, 0, uint32(now))) - 1;
         UserID[msg.sender] = id;
         UserCount[msg.sender]++;
-        emit NewUser(_name, _age);
+        //emit NewUser(_name, _age);
     }
 
     function getUserByAddress() external view returns(string, uint8)

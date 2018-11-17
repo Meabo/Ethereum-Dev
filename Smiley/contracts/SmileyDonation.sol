@@ -7,13 +7,13 @@ contract SmileyDonation is SmileyContract
     mapping (address => uint) public donations;
     uint cooldowntime = 1 days;
 
-    function donate(address _from) public
+    function donate() public
     {
-        seeVideo(_from);
+        seeVideo();
     }
 
 
-    function seeVideo(address _from) internal
+    function seeVideo() internal
     {
         uint id = UserID[msg.sender];
         User storage currentUser = users[id];
@@ -33,7 +33,7 @@ contract SmileyDonation is SmileyContract
         _currentUser.readyTime += uint32(now + cooldowntime);
     }
 
-    function getViews(address _from) public view returns(uint256)
+    function getViews(address _from) public view returns(uint)
     {
         return donations[_from];
     }
