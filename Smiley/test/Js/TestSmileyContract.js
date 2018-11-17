@@ -9,4 +9,5 @@ contract("SmileyContract", async(accounts) =>
         const smiley = await SmileyContract.new();
         assert.equal(await smiley.owner.call(), expected_owner);
     })
-})
+
+});
