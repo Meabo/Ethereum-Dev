@@ -5,13 +5,17 @@ import './SmileyContract.sol';
 contract SmileyDonation is SmileyContract
 {
     mapping (address => uint) public donations;
+    mapping (address => uint) public balance_ong;
+
     uint cooldowntime = 1 days;
 
-    function donate() public
+
+
+    function donate(address ong_address) public
     {
         seeVideo();
+        balance_ong[ong_address]++;
     }
-
 
     function seeVideo() internal
     {
@@ -36,5 +40,10 @@ contract SmileyDonation is SmileyContract
     function getViews(address _from) public view returns(uint)
     {
         return donations[_from];
+    }
+
+    function getBalanceOfONG(address _from) public view returns(uint)
+    {
+        return balance_ong[_from];
     }
 }

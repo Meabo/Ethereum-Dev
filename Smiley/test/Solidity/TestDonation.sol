@@ -14,7 +14,7 @@ contract TestDonation
         uint8 expected_age = 26;
         smileydonation.createUser(expected_name, expected_age);
 
-        smileydonation.donate();
+        smileydonation.donate(msg.sender);
         Assert.equal(smileydonation.getViews(this), 1, "Expected to be equals");
     }
 }

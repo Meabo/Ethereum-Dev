@@ -10,4 +10,6 @@ contract("SmileyContract", async(accounts) =>
         assert.equal(await smiley.owner.call(), expected_owner);
     })
 
+
+
 });
