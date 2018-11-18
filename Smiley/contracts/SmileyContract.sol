@@ -1,4 +1,4 @@
-pragma solidity ^0.4.24;
+pragma solidity ^0.4.25;
 
 contract SmileyContract
 {
@@ -24,7 +24,7 @@ contract SmileyContract
         owner = msg.sender;
     }
 
-    function createUser(string _name, uint8 _age) public
+    function createUser(string memory _name, uint8 _age) public
     {
         require(UserCount[msg.sender] == 0);
         uint id = users.push(User(_name, _age, 0, 0, uint32(now))) - 1;
@@ -33,7 +33,7 @@ contract SmileyContract
         //emit NewUser(_name, _age);
     }
 
-    function getUserByAddress() external view returns(string, uint8)
+    function getUserByAddress() external view returns(string memory, uint8)
     {
         uint id = UserID[msg.sender];
         string memory user_name = users[id].name;

@@ -12,12 +12,6 @@ contract TestSmileyContract
         Assert.equal(smiley.owner(), this, "Owner should be the deployer");
     }
 
-    function test_CheckOwner_DeployedContract() public
-    {
-        SmileyContract smiley = SmileyContract(DeployedAddresses.SmileyContract());
-        Assert.equal(smiley.owner(), msg.sender, "Owner, after deploying, should be deployer" );
-    }
-
     function test_CreateUser() public
     {
         SmileyContract smiley = new SmileyContract();
