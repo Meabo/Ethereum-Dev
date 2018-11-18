@@ -1,26 +1,28 @@
 <!DOCTYPE html>
-<html lang=”en”>
+<html lang="en">
 <head>
-    <meta charset=”UTF-8">
-    <meta name=”viewport” content=”width=device-width, initial-scale=1.0">
-    <meta http-equiv=”X-UA-Compatible” content=”ie=edge”>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
-    <link rel=”stylesheet” type=”text/css” href=”index.css”>
-    <script src=”./node_modules/web3/dist/web3.min.js”></script>
+    <link rel="stylesheet" type="text/css" href="css/index.css">
+    <script src="https://cdn.jsdelivr.net/gh/ethereum/web3.js@1.0.0-beta.36/dist/web3.min.js" integrity="sha256-nWBTbvxhJgjslRyuAKJHK+XcZPlCnmIAAMixz6EefVk=" crossorigin="anonymous"></script>
 </head>
 <body>
-<div class=”container”>
+<div class="container">
     <h1>Smiley</h1>
-    <h2 id=”instructor”></h2>
-    <label for=”name” class=”col-lg-2 control-label”>Name</label>
-    <input id=”name” type=”text”>
-    <label for=”name” class=”col-lg-2 control-label”>Age</label>
-    <input id=”age” type=”text”>
-    <button id=”button”>Create User</button>
+    <h2 id="instructor"></h2>
+    <label for="name" class="col-lg-2 control-label">Name</label>
+    <input id="name" type="text">
+    <label for="name" class="col-lg-2 control-label">Age</label>
+    <input id="age" type="text">
+    <button id="button" onclick="createUser()">Create User</button>
+    <div id="result"></div>
 </div>
-<script src=”https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+<script language="javascript" type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 <script>
     let smiley;
+    let userAccount;
 
     // future code goes here
     window.addEventListener('load', function() {
@@ -28,23 +30,167 @@
         // Checking if Web3 has been injected by the browser (Mist/MetaMask)
         if (typeof web3 !== 'undefined') {
             // Use Mist/MetaMask's provider
-            web3js = new Web3(web3.currentProvider);
+            web3 = new Web3(web3.currentProvider);
         } else {
             // Handle the case where the user doesn't have Metamask installed
             // Probably show them a message prompting them to install Metamask
+            web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:7545"));
         }
 
         // Now you can start your app & access web3 freely:
         startApp()
 
     })
+    function createUser()
+    {
+        let name = $('#name').val();
+        document.getElementById("result").innerHTML = "User created " + name;
+    }
 
+    function getAccount()
+    {
+        let accountInterval = setInterval(function()
+        {
+            if (web3.eth.accounts[0] !== userAccount)
+            {
+                userAccount = web3.eth.accounts[0];
+            }
+        }, 100);
+    }
 
     function startApp() {
-        let SmileyAddress = "YOUR_CONTRACT_ADDRESS";
-        let SmileyABI = "";
-
-        smiley = new web3js.eth.Contract(SmileyABI, SmileyAddress);
+        let SmileyAddress = "0x170758644850625B906963CA383FEBD9e0A75F1e";
+        let Abi = [
+            {
+                "constant": true,
+                "inputs": [
+                    {
+                        "name": "",
+                        "type": "uint256"
+                    }
+                ],
+                "name": "users",
+                "outputs": [
+                    {
+                        "name": "name",
+                        "type": "string"
+                    },
+                    {
+                        "name": "age",
+                        "type": "uint8"
+                    },
+                    {
+                        "name": "points",
+                        "type": "uint32"
+                    },
+                    {
+                        "name": "level",
+                        "type": "uint32"
+                    },
+                    {
+                        "name": "readyTime",
+                        "type": "uint32"
+                    }
+                ],
+                "payable": false,
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "constant": true,
+                "inputs": [],
+                "name": "getUserByAddress",
+                "outputs": [
+                    {
+                        "name": "",
+                        "type": "string"
+                    },
+                    {
+                        "name": "",
+                        "type": "uint8"
+                    }
+                ],
+                "payable": false,
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "constant": false,
+                "inputs": [
+                    {
+                        "name": "_name",
+                        "type": "string"
+                    },
+                    {
+                        "name": "_age",
+                        "type": "uint8"
+                    }
+                ],
+                "name": "createUser",
+                "outputs": [],
+                "payable": false,
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "constant": true,
+                "inputs": [],
+                "name": "owner",
+                "outputs": [
+                    {
+                        "name": "",
+                        "type": "address"
+                    }
+                ],
+                "payable": false,
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "constant": true,
+                "inputs": [
+                    {
+                        "name": "",
+                        "type": "address"
+                    }
+                ],
+                "name": "UserID",
+                "outputs": [
+                    {
+                        "name": "",
+                        "type": "uint256"
+                    }
+                ],
+                "payable": false,
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "inputs": [],
+                "payable": false,
+                "stateMutability": "nonpayable",
+                "type": "constructor"
+            },
+            {
+                "anonymous": false,
+                "inputs": [
+                    {
+                        "indexed": false,
+                        "name": "name",
+                        "type": "string"
+                    },
+                    {
+                        "indexed": false,
+                        "name": "age",
+                        "type": "uint8"
+                    }
+                ],
+                "name": "NewUser",
+                "type": "event"
+            }
+        ];
+        smiley = new web3.eth.Contract(Abi, SmileyAddress);
+        getAccount();
     }
 
 </script>
