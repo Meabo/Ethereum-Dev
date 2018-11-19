@@ -18,115 +18,80 @@
     <input id="age" type="text">
     <button id="button" onclick="createUser()">Create User</button>
     <div id="result"></div>
+
 </div>
 <script language="javascript" type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 <script>
     let smiley;
     let userAccount;
 
-    // future code goes here
-    window.addEventListener('load', function() {
+   startApp();
 
-        // Checking if Web3 has been injected by the browser (Mist/MetaMask)
-        if (typeof web3 !== 'undefined') {
-            // Use Mist/MetaMask's provider
-            web3 = new Web3(web3.currentProvider);
-        } else {
-            // Handle the case where the user doesn't have Metamask installed
-            // Probably show them a message prompting them to install Metamask
-            web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:7545"));
-        }
 
-        // Now you can start your app & access web3 freely:
-        startApp()
+    function dislayUser()
+    {
+        return smiley.methods.getInstructor().call().then(instructor =>
+        {
+            $("#instructor").text(instructor[0]+' ('+ instructor[1]+' years old)');
+        });
+    }
 
-    })
     function createUser()
     {
         let name = $('#name').val();
-        document.getElementById("result").innerHTML = "User created " + name;
+        let age = $('#age').val();
+
+        $("#result").text("Creating a new User on the blockchain. This may take a while...");
+        // Send the tx to our contract:
+        return smiley.methods.setInstructor(name, age)
+            .send({ from: userAccount})
+            .on("receipt", function(receipt)
+            {
+                $("#result").text("Successfully created " + name + "!");
+                dislayUser();
+            })
+            .on("error", function(error) {
+                // Do something to alert the user their transaction has failed
+                $("#result").text(error);
+            });
+
     }
+
+
 
     function getAccount()
     {
-        let accountInterval = setInterval(function()
+        web3.eth.getAccounts().then(accounts =>
         {
-            if (web3.eth.accounts[0] !== userAccount)
-            {
-                userAccount = web3.eth.accounts[0];
-            }
-        }, 100);
+            userAccount = accounts[0];
+            console.log(accounts);
+        })
+
+    }
+
+
+    function CheckConnection()
+    {
     }
 
     function startApp() {
-        let SmileyAddress = "0x170758644850625B906963CA383FEBD9e0A75F1e";
+
+        web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:7545"));
+        let SmileyAddress = "0xEd4c47eBC0305E14b58f2A6a2aC2bEA6F6054ed9";
         let Abi = [
-            {
-                "constant": true,
-                "inputs": [
-                    {
-                        "name": "",
-                        "type": "uint256"
-                    }
-                ],
-                "name": "users",
-                "outputs": [
-                    {
-                        "name": "name",
-                        "type": "string"
-                    },
-                    {
-                        "name": "age",
-                        "type": "uint8"
-                    },
-                    {
-                        "name": "points",
-                        "type": "uint32"
-                    },
-                    {
-                        "name": "level",
-                        "type": "uint32"
-                    },
-                    {
-                        "name": "readyTime",
-                        "type": "uint32"
-                    }
-                ],
-                "payable": false,
-                "stateMutability": "view",
-                "type": "function"
-            },
-            {
-                "constant": true,
-                "inputs": [],
-                "name": "getUserByAddress",
-                "outputs": [
-                    {
-                        "name": "",
-                        "type": "string"
-                    },
-                    {
-                        "name": "",
-                        "type": "uint8"
-                    }
-                ],
-                "payable": false,
-                "stateMutability": "view",
-                "type": "function"
-            },
             {
                 "constant": false,
                 "inputs": [
                     {
-                        "name": "_name",
+                        "name": "_fName",
                         "type": "string"
                     },
                     {
                         "name": "_age",
-                        "type": "uint8"
+                        "type": "uint256"
                     }
                 ],
-                "name": "createUser",
+                "name": "setInstructor",
                 "outputs": [],
                 "payable": false,
                 "stateMutability": "nonpayable",
@@ -135,27 +100,12 @@
             {
                 "constant": true,
                 "inputs": [],
-                "name": "owner",
+                "name": "getInstructor",
                 "outputs": [
                     {
                         "name": "",
-                        "type": "address"
-                    }
-                ],
-                "payable": false,
-                "stateMutability": "view",
-                "type": "function"
-            },
-            {
-                "constant": true,
-                "inputs": [
-                    {
-                        "name": "",
-                        "type": "address"
-                    }
-                ],
-                "name": "UserID",
-                "outputs": [
+                        "type": "string"
+                    },
                     {
                         "name": "",
                         "type": "uint256"
@@ -164,33 +114,13 @@
                 "payable": false,
                 "stateMutability": "view",
                 "type": "function"
-            },
-            {
-                "inputs": [],
-                "payable": false,
-                "stateMutability": "nonpayable",
-                "type": "constructor"
-            },
-            {
-                "anonymous": false,
-                "inputs": [
-                    {
-                        "indexed": false,
-                        "name": "name",
-                        "type": "string"
-                    },
-                    {
-                        "indexed": false,
-                        "name": "age",
-                        "type": "uint8"
-                    }
-                ],
-                "name": "NewUser",
-                "type": "event"
             }
         ];
         smiley = new web3.eth.Contract(Abi, SmileyAddress);
+        smiley.options.address = SmileyAddress;
+        console.log(smiley);
         getAccount();
+        CheckConnection();
     }
 
 </script>
