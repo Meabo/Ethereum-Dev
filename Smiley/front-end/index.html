@@ -25,15 +25,13 @@
     let smiley;
     let userAccount;
 
-   startApp();
+    startApp();
 
 
-    function dislayUser()
+    async function dislayUser()
     {
-        return smiley.methods.getInstructor().call().then(instructor =>
-        {
-            $("#instructor").text(instructor[0]+' ('+ instructor[1]+' years old)');
-        });
+        let instructor = await smiley.methods.getInstructor().call();
+        $("#instructor").text(instructor[0]+' ('+ instructor[1]+' years old)');
     }
 
     function createUser()
@@ -45,10 +43,10 @@
         // Send the tx to our contract:
         return smiley.methods.setInstructor(name, age)
             .send({ from: userAccount})
-            .on("receipt", function(receipt)
+            .on("receipt", async function(receipt)
             {
                 $("#result").text("Successfully created " + name + "!");
-                dislayUser();
+                await dislayUser();
             })
             .on("error", function(error) {
                 // Do something to alert the user their transaction has failed
@@ -59,14 +57,10 @@
 
 
 
-    function getAccount()
+    async function getAccount()
     {
-        web3.eth.getAccounts().then(accounts =>
-        {
-            userAccount = accounts[0];
-            console.log(accounts);
-        })
-
+        let accounts = await web3.eth.getAccounts();
+        userAccount = accounts[0];
     }
 
 
@@ -74,7 +68,8 @@
     {
     }
 
-    function startApp() {
+    async function startApp()
+    {
 
         web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:7545"));
         let SmileyAddress = "0xEd4c47eBC0305E14b58f2A6a2aC2bEA6F6054ed9";
@@ -119,7 +114,7 @@
         smiley = new web3.eth.Contract(Abi, SmileyAddress);
         smiley.options.address = SmileyAddress;
         console.log(smiley);
-        getAccount();
+        await getAccount();
         CheckConnection();
     }
 
