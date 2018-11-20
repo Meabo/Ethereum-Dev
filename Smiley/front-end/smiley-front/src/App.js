@@ -1,28 +1,54 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
+import UserPanel from "./components/UserPanel";
+import { withWeb3 } from 'react-web3-provider';
 
-class App extends Component {
-  render() {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
-    );
+
+class App extends Component
+{
+    state = {
+        account: [],
+        abi: [],
+        contractAddress: ''
+    };
+
+    getCurrentAccount = () =>
+    {
+        let self = this;
+        const {web3} = this.props;
+        web3.eth.getAccounts().then(account =>
+        {
+            self.setState(
+                {
+                    account: account
+                })
+        })
+    };
+
+    connectContract = () =>
+    {
+        const {web3} = this.props;
+        let smileyContract = new web3.eth.Contract(this.state.abi, this.state.contractAddress);
+
+    };
+
+
+    componentDidMount()
+    {
+        this.getCurrentAccount();
+        this.connectContract();
+    }
+
+  render()
+  {
+        return(
+            <React.Fragment>
+                <UserPanel/>
+            </React.Fragment>
+        )
+
+
   }
 }
 
-export default App;
+export default withWeb3(App);
