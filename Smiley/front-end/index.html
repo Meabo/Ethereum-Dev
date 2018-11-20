@@ -24,13 +24,14 @@
 <script>
     let smiley;
     let userAccount;
+    let user;
 
     startApp();
 
 
     async function dislayUser()
     {
-        let instructor = await smiley.methods.getInstructor().call();
+        user = await smiley.methods.getInstructor().call();
         $("#instructor").text(instructor[0]+' ('+ instructor[1]+' years old)');
     }
 
@@ -72,7 +73,7 @@
     {
 
         web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:7545"));
-        let SmileyAddress = "0xEd4c47eBC0305E14b58f2A6a2aC2bEA6F6054ed9";
+        let SmileyAddress = "0x777100d877a625a1c1326682af4b9e4caf34c6ca";
         let Abi = [
             {
                 "constant": false,

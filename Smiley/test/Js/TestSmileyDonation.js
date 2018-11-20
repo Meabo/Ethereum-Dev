@@ -35,6 +35,13 @@ contract("SmileyDonation", async(accounts) =>
         assert.equal(balance_of_ong, 1);
     });
 
+    it("Should have a balance of 1 unit after a donation", async() =>
+    {
+        await smileydonation.donate(ong_address);
+        let balance_of_ong = await smileydonation.getBalanceOfONG(ong_address);
+        assert.equal(balance_of_ong, 1);
+    });
+
 
 
 
