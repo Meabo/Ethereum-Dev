@@ -1,10 +1,10 @@
 pragma solidity ^0.4.24;
 
-contract SmileyContract
+contract SmileyUser
 {
     event NewUser(string name, uint8 age);
 
-    address public owner;
+    address public owner_;
     struct User
     {
         string name;
@@ -21,7 +21,7 @@ contract SmileyContract
 
     constructor() public
     {
-        owner = msg.sender;
+        owner_ = msg.sender;
     }
 
     function createUser(string memory _name, uint8 _age) public

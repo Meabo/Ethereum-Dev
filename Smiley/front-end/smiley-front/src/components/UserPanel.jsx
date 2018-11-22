@@ -12,7 +12,6 @@ class UserPanel extends Component
      CreateUser = () =>
     {
         const {web3} = this.props;
-        console.log(web3);
 
     };
 

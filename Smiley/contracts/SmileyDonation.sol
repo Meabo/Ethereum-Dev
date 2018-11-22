@@ -1,10 +1,11 @@
 pragma solidity ^0.4.24;
 
-import './SmileyContract.sol';
+import './SmileyUser.sol';
+import "./Ownable.sol";
 
-contract SmileyDonation is SmileyContract
+contract SmileyDonation is SmileyUser, Ownable
 {
-    event NewOng(string name, address age, string url);
+    event NewOng(string name, address fund, string url);
 
 
     // Stores User donations, 1 each time a user sees a video
@@ -25,11 +26,12 @@ contract SmileyDonation is SmileyContract
 
     Ong[] public ongs;
 
-    function createONG(string memory _name, address _fund, string memory _url) public
+    function createONG(string memory _name, address _fund, string memory _url) public returns(uint id_created)
     {
         uint id = ongs.push(Ong(_name, _fund, _url)) - 1;
         OngIDs[msg.sender] = id;
         emit NewOng(_name, _fund, _url);
+        return id;
     }
 
     function getONGbyID(uint id) external view returns(string name, address fund, string url)
